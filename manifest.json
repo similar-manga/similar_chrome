@@ -1,0 +1,37 @@
+{
+
+  "manifest_version": 2,
+ 
+  "name": "MangaDex Similar Manga",
+  "version": "0.1.0",
+  "description": "Similar manga recommendations for MangaDex.",
+ 
+  "content_scripts": [{
+
+    "js": [
+      "scripts/jquery-3.5.1.min.js",
+      "scripts/xbbcode.js",
+      "scripts/content.js"
+    ],
+
+    "matches": [
+      "https://mangadex.org/*",
+      "http://mangadex.org/*",
+      "https://mangadex.cc/*",
+      "http://mangadex.cc/*"
+    ]
+
+  }],
+
+  "permissions": [
+    "storage",
+    "unlimitedStorage"
+  ],
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+
+}
