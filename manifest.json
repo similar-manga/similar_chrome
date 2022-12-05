@@ -1,27 +1,21 @@
 {
-
   "manifest_version": 3,
- 
   "name": "MangaDex Similar Manga",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Similar manga recommendations for MangaDex.",
- 
-  "content_scripts": [{
-
-    "js": [
-      "scripts/content.js"
-    ],
-
-    "matches": [
-      "https://mangadex.org/*"
-    ]
-
-  }],
-
+  "content_scripts": [
+    {
+      "js": [
+        "scripts/content.js"
+      ],
+      "matches": [
+        "https://mangadex.org/*"
+      ]
+    }
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   }
-
 }
