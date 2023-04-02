@@ -65,7 +65,8 @@ function on_similar_tab_click(e) {
 
     // Finally replace with our HTML content!
     if(tab_old == null) {
-        tab_old = document.getElementsByClassName(selector_tabs)[0].parentNode.parentNode.lastChild;
+        var children = document.getElementsByClassName(selector_tabs)[0].parentNode.parentNode.children;
+        tab_old = children[children.length - 1];
         tab_data = tab_old.innerHTML;
         tab_old.innerHTML = similar_data;
     }
