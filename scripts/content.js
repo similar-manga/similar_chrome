@@ -4,7 +4,7 @@
 var selector_tab = "select__tab";
 var selector_tabs = "select__tabs";
 var selector_track = "track";
-var selector_tab_active = "select__tab-active";
+var selector_tab_active = ["select__tab-active", "active"];
 
 
 // API ENDPOINTS
@@ -16,7 +16,7 @@ var url_similar = "https://api.similarmanga.com/similar/"
 // DATA FOR TAB DISPLAY
 var tab_data = "";
 var tab_old = null;
-var similar_data_default = '<div class="grid gap-4 mb-12"><div role="alert" class="flex items-center rounded justify-center py-4 px-6 mt-2 mb-6 bg-accent"><span class="text-center">No Similar Titles</span></div></div>';
+var similar_data_default = '<div class="flex gap-6 items-start"><div role="alert" class="flex items-center rounded justify-center py-4 px-6 mt-2 mb-6 bg-accent"><span class="text-center">No Similar Titles</span></div></div>';
 var similar_data = '';
 
 // PARAMETERS
@@ -28,9 +28,9 @@ function on_similar_tab_not_click(e) {
     // remove all highlights, highlight current
     const elements = document.getElementsByClassName(selector_tab);
     for (var i = 0; i < elements.length; i++) {
-      elements[i].classList.remove(selector_tab_active);
+      elements[i].classList.remove(...selector_tab_active);
     }
-    this.classList.add(selector_tab_active);
+    this.classList.add(...selector_tab_active);
 
     // show the background overlay
     var track = document.getElementsByClassName(selector_tabs)[0];
@@ -54,9 +54,9 @@ function on_similar_tab_click(e) {
     // select this last one to be active
     const elements = document.getElementsByClassName(selector_tab);
     for (var i = 0; i < elements.length; i++) {
-      elements[i].classList.remove(selector_tab_active);
+      elements[i].classList.remove(...selector_tab_active);
     }
-    this.classList.add(selector_tab_active);
+    this.classList.add(...selector_tab_active);
 
     // remove the background overlay
     var track = document.getElementsByClassName(selector_tabs)[0];
@@ -93,8 +93,8 @@ function add_button() {
         // Get the element of the tab we will clone
         // For some reason this can be null early in the page load
         console.log(elements)
-        console.log(elements[1])
-        if(elements[1] == null) {
+        console.log(elements[0])
+        if(elements[0] == null) {
             button_add_tries = button_add_tries + 1;
             if(button_add_tries < retries_max) {
                 setTimeout(add_button, 1000);
@@ -108,13 +108,14 @@ function add_button() {
         }
 
         // Create the new button!
-        var element_new = elements[1].cloneNode(true)
+        var element_new = elements[0].cloneNode(true)
         element_new.id = "similar_ext_button"
         element_new.text = "Similar"
         element_new.href = "?tab=similar"
         element_new.remove(selector_tab_active);
         element_new.addEventListener("click", on_similar_tab_click);
-        var element = elements[1]
+        element_new.classList.remove(...selector_tab_active);
+        var element = elements[0]
         if(show_button) {
             element.parentNode.insertBefore(element_new, element.nextSibling);
         }
@@ -159,12 +160,14 @@ function populate_similar_tab_page(data) {
         // This is a custom style for the manga blocks
         // Hopefully this won't break on site updates
         similar_data = '<style>';
-        similar_data += '.manga-card { display: grid; position: relative; overflow: hidden; flex-grow: 1; padding: 0.5rem; width: 100%; gap: 0.25rem 0.5rem; grid-template-columns: min(25%,150px) 1fr auto; grid-template-rows: auto auto auto 1fr; grid-template-areas: "art title title" "art stats status" "art tags tags" "art description description"; border-radius: 0.125rem; background-color: var(--md-accent); }';
+        similar_data += '.manga-card { background-color: var(--md-accent); display: grid; flex-grow: 1; gap: 0.25rem 0.5rem; grid-template-areas: "art title title" "art stats status" "art tags tags" "art description description"; grid-template-columns: min(25%,150px) 1fr auto; grid-template-rows: auto auto auto 1fr; padding: 0.5rem; position: relative; width: 100%; }';
+        similar_data += '.description { height: 8.4em; overflow: hidden; position: relative; }';
+        similar_data += '.description:after { background: linear-gradient(var(--md-background-transparent),var(--md-accent)); bottom: 0; content: ""; display: block; height: 0.9em; left: 0; position: absolute; width: 100%; }';
         similar_data += '</style>';
 
         // Else lets create it!
-        similar_data += '<div class="grid gap-4 mb-12">';
-        similar_data += '<div class="grid gap-2 grid-cols-2">';
+        similar_data += '<div class="follows__content">';
+        similar_data += '<div class="grid gap-2 lg:grid-cols-2">';
         for (var i = 0; i < data["matches"].length; i++) {
             try {
                 
@@ -257,7 +260,7 @@ function trigger_url_change() {
         populate_similar_tab_page(data);
 
     }).catch(function (err) {
-        console.warn('similar manga not found...');
+        console.log('similar manga not found...');
         hide_button();
         // retries_current = retries_current + 1;
         // if(retries_current < retries_max) {
